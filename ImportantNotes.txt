@@ -1,0 +1,4 @@
+- All environment values specified in : docker-compose.yml are just for testing and make sure
+    that process is working fine without any issues.
+
+- Actual environment values will be provided later throw Travis & Beanstalk environment. 
