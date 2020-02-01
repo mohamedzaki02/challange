@@ -21,7 +21,7 @@ module.exports = {
                     .then(() => {
                         pgClient.query("INSERT INTO customers (customerId, fullName, address) VALUES " +
                             "(123, 'mohamed zaki', 'new address')," +
-                            "(124, 'momtaz ahmed', 'other value')" +
+                            "(124, 'momtaz ahmed', 'other value')," +
                             "(125, 'mark tomas', 'somewhere')"
                         )
                             .then(() => {

@@ -9,14 +9,14 @@ const vehicleRequester = new cote.Requester({ name: 'customers' });
 
 
 //TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
-vehicleRequester.send({ type: 'handshake' }, (handshake_Response) => {
+vehicleRequester.send({ type: 'handshake' }, handshake_Response => {
     console.log('### Handshake Response : ' + handshake_Response + ' ###');
 });
 
 
 
 const filterVehicles = (status, cb) => {
-    vehicleRequester.send({ type: 'filter_vehicles_status', status: status }, (customerIds) => {
+    vehicleRequester.send({ type: 'filter_vehicles_status', status: status }, customerIds => {
         cb(customerIds);
     });
 }
