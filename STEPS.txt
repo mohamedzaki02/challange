@@ -15,3 +15,22 @@
 6- add production docker files in order to be used by travis (next step)
     for - node services : in this example >> we only change npm run dev (nodemon) to npm run start.
     for - client : we use multi-step docker builds.
+
+7- CI/CD Approch: 
+    > Git(push to master).
+    > Travis build dev images & Run tests (Overriding Startup Command).
+    > After All Tests Passes With Exist Code 0 => Travis build Prod Images.
+    > Travis Deploys Prod Images to Dockerhub.
+    > AWS BeanStalk gets notified and pull the images & run the containers
+
+8- Before CD Steps:
+    - SYNC your GIT account with Travis.
+    - Check the repo you want to use
+    - Repository Settings > Environment Variables 
+        > add DOCKER_ID , DOCKER_PASS to push your prod/build images to docker hub.
+        > add AWS_ACCESS_KEY , AWS_SECRET_KEY (Provided from aws Beanstalk deployment user - programatic access)
+    - Create Security Group first and allow all ports we going to need like (6379) for redis , (5432 & 5435) for postgres DBs.
+    - MAKE SURE : All AWS Resources (Redis , Postgres , Beanstalk) in the same VPC and Having same Security Group.
+    - Create ElastiCache Redis & get Primary Endpoint url & Port.
+    - Create Elastic Beanstalk Multi-Docker Container Deployment Environment.
+    - Choose additional Configuration > Modify Application's Environment Software & add Environment Variables : REDIS_HOST , REDIS_PORT.
