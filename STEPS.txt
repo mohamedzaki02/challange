@@ -11,3 +11,7 @@
 
 5- create nginx to work as (routing proxy server) and another one for the client it self.
     Result Should be like : ./STEPS/02-adding _client.PNG .
+
+6- add production docker files in order to be used by travis (next step)
+    for - node services : in this example >> we only change npm run dev (nodemon) to npm run start.
+    for - client : we use multi-step docker builds.
