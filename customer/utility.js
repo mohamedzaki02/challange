@@ -19,11 +19,15 @@ module.exports = {
                 pgClient
                     .query("CREATE TABLE IF NOT EXISTS customers (customerId integer PRIMARY KEY,fullName varchar(45) UNIQUE NOT NULL,address varchar(450) NOT NULL)")
                     .then(() => {
-                        pgClient.query("INSERT INTO customers (customerId, fullName, address) VALUES (11, 'mohamed zaki', 'new address'), (12, 'momtaz ahmed', 'other value')")
+                        pgClient.query("INSERT INTO customers (customerId, fullName, address) VALUES " +
+                            "(123, 'mohamed zaki', 'new address')," +
+                            "(124, 'momtaz ahmed', 'other value')" +
+                            "(125, 'mark tomas', 'somewhere')"
+                        )
                             .then(() => {
                                 pgClient.query("SELECT * from customers")
                                     .then(allCustomers => {
-                                        
+
                                         console.log('### ALL CUSTOMERS ###');
                                         console.log(allCustomers.rows);
                                         console.log('### ----------------------------------------------------------------------- ###');
@@ -48,5 +52,13 @@ module.exports = {
                     .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
+    },
+    getCustomers: (query, cb) => {
+        pgClient
+            .query(query)
+            .then((customers) => {
+                cb(customers.rows);
+            })
+            .catch(err => cb({ error: err }));
     }
 };

@@ -40,3 +40,4 @@
 
 > NOTE: IN BOTH docker-compose.yml & .travis.yml : we need only one postgres service to make sure our process is working fine.
         > but, in AWS > RDS > Postgres > we are going to create two DBs (Customers_db , Vehicles_db).
+11- NOW, create the two aws postgres Dbs and add aws Elastic Beanstalk Environment Variables for created Dbs.

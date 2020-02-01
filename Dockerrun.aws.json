@@ -27,6 +27,16 @@
             "image": "mmzaki/customer-aws",
             "hostname": "customer",
             "essential": false,
+            "links": [
+                "vehicle"
+            ],
+            "memory": 128
+        },
+        {
+            "name": "vehicle",
+            "image": "mmzaki/vehicle-aws",
+            "hostname": "vehicle",
+            "essential": false,
             "memory": 128
         },
         {
@@ -43,7 +53,8 @@
             "links": [
                 "client",
                 "subscriber",
-                "customer"
+                "customer",
+                "vehicle"
             ],
             "memory": 128
         }

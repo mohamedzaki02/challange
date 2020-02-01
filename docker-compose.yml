@@ -13,6 +13,7 @@ services:
     customer:
         depends_on:
             - "postgress"
+            - "vehicle"
         build:
             context: ./customer
             dockerfile: Dockerfile.dev
@@ -23,10 +24,28 @@ services:
             - "5000:5000"
         environment:
             - CUSTOMER_PG_USER=postgres
-            - CUSTOMER_PG_HOST=postgres
+            - CUSTOMER_PG_HOST=postgress
             - CUSTOMER_PG_DB=postgres
             - CUSTOMER_PG_PASS=postgres
             - CUSTOMER_PG_PORT=5432
+    # USING SAME POSTGRESS SERVICE CONFIGURATION - BUT, IN AWS WE USE TWO DIFFERENT DBs
+    vehicle:
+        depends_on:
+            - "postgress"
+        build:
+            context: ./vehicle
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - ./vehicle:/app
+        ports:
+            - "6000:6000"
+        environment:
+            - VEHICLE_PG_USER=postgres
+            - VEHICLE_PG_HOST=postgress
+            - VEHICLE_PG_DB=postgres
+            - VEHICLE_PG_PASS=postgres
+            - VEHICLE_PG_PORT=5432
     nginx:
         depends_on:
             - subscriber

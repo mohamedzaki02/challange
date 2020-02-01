@@ -6,6 +6,15 @@ const customersUtility = require('./utility');
 // USING COTE : Customers Service is expected to REQUEST (connected|disconnected) Vehicles => From Vehicles Service
 const vehicleRequester = new cote.Requester({ name: 'customers' });
 
+
+
+//TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
+vehicleRequester.send({ type: 'handshake' }, (handshake_Response) => {
+    console.log('### Handshake Response : ' + handshake_Response + ' ###');
+});
+
+
+
 const filterVehicles = (status, cb) => {
     vehicleRequester.send({ type: 'filter_vehicles_status', status: status }, (customerIds) => {
         cb(customerIds);
@@ -16,14 +25,6 @@ customersUtility.prepareTable();
 
 
 app.post('/', (req, res) => {
-    const getCustomers = query => {
-        pgClient
-            .query(query)
-            .then((customers) => {
-                res.status(200).json(customers.rows);
-            })
-            .catch(err => res.status(500).json(err));
-    }
 
     let query = 'SELECT * from customers',
         filterExpression = false,
@@ -41,11 +42,18 @@ app.post('/', (req, res) => {
             filterExpressionString += ((req.body.customerId ? ' AND ' : '') +
                 (status ? '' : 'NOT ') +
                 'customerId IN (' + customerIds.join(',') + ')');
-            getCustomers(query + (filterExpression ? filterExpressionString : ''));
-        })
-            .catch(err => res.status(500).json(err));
+            let finalQuery = query + (filterExpression ? filterExpressionString : '');
+            console.log(finalQuery);
+            customersUtility.getCustomers(finalQuery, customersResponse => {
+                if (customersResponse.error) res.status(500).json(customersUtility.error);
+                else res.status(200).json(customersUtility);
+            });
+        });
     } else {
-        getCustomers(query + (filterExpression ? filterExpressionString : ''));
+        customersUtility.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+            if (customersResponse.error) res.status(500).json(customersUtility.error);
+            else res.status(200).json(customersUtility);
+        });
     }
 
 });

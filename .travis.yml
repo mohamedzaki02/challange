@@ -8,7 +8,7 @@ before_install:
   - docker build -t mmzaki/client-test -f ./client/Dockerfile.dev ./client
 
 # we do not need two DBs to be created now in this level
-# but, in a more comple scenario ... we might need our DBs up & running  
+# but, in a more comple scenario ... we might need our DBs up & running
 before_script:
   - psql -c 'create database customers_db;' -U postgres
   - psql -c 'create database vehicles_db;' -U postgres
@@ -35,6 +35,7 @@ after_success:
   - docker build -t mmzaki/subscriber-aws ./subscriber
   - docker build -t mmzaki/worker-aws ./worker
   - docker build -t mmzaki/customer-aws ./customer
+  - docker build -t mmzaki/vehicle-aws ./vehicle
 
   # login to docker hub before pushing the images
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
@@ -44,6 +45,7 @@ after_success:
   - docker push mmzaki/subscriber-aws
   - docker push mmzaki/worker-aws
   - docker push mmzaki/customer-aws
+  - docker push mmzaki/vehicle-aws
 
 deploy:
   edge: true
