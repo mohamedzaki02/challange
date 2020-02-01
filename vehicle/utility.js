@@ -17,16 +17,16 @@ module.exports = {
             .query("DROP TABLE IF EXISTS vehicles CASCADE")
             .then(() => {
                 pgClient
-                    .query("CREATE TABLE IF NOT EXISTS vehicles (vehicleId integer PRIMARY KEY,customerId integer NOT NULL,registerNo varchar(45) UNIQUE NOT NULL,vehicleStatus boolean DEFAULT FALSE)")
+                    .query("CREATE TABLE IF NOT EXISTS vehicles (vehicleId integer PRIMARY KEY,customerId integer NOT NULL,registerNo varchar(45) UNIQUE NOT NULL)")
                     .then(() => {
-                        pgClient.query("INSERT INTO vehicles (vehicleId, customerId, registerNo, vehicleStatus) VALUES " +
-                            "(11, 123, 'asd-123', true)," +
-                            "(12, 123, 'dxb-527', true)" +
-                            "(13, 124, 'qwe-331', true)" +
-                            "(14, 124, 'wer-455', true)" +
-                            "(15, 124, 'rty-776', true)" +
-                            "(16, 124, 'khj-654', true)" +
-                            "(17, 125, 'hfg-227', true)"
+                        pgClient.query("INSERT INTO vehicles (vehicleId, customerId, registerNo) VALUES " +
+                            "(11, 123, 'asd-123')," +
+                            "(12, 123, 'dxb-527')," +
+                            "(13, 124, 'qwe-331')," +
+                            "(14, 124, 'wer-455')," +
+                            "(15, 124, 'rty-776')," +
+                            "(16, 124, 'khj-654')," +
+                            "(17, 125, 'hfg-227')"
                         )
                             .then(() => {
                                 pgClient.query("SELECT * from vehicles")
@@ -45,23 +45,12 @@ module.exports = {
             })
             .catch(err => console.log(err));
     },
-    getVehicles: (query, cb) => {
+    getVehicles: (customerId, cb) => {
         pgClient
-            .query(query)
+            .query('SELECT * from vehicles WHERE customerId=' + customerId)
             .then((vehicles) => {
                 cb(vehicles.rows);
             })
             .catch(err => cb({ error: err }));
-    },
-    filterVehicleStatus: (status, cb) => {
-        pgClient
-            .query('SELECT * from vehicles WHERE vehcicleStatus=' + status)
-            .then((vehicles) => {
-                cb(vehicles.rows.map(v => v.customerId));
-            })
-            .catch(err => {
-                console.log(err);
-                cb([]);
-            });
     }
 };
