@@ -2,6 +2,31 @@ version: "3"
 services:
     redis:
         image: "redis:latest"
+    postgress:
+        image: "postgres"
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            - "5432:5432"
+    customer:
+        depends_on:
+            - "postgress"
+        build:
+            context: ./customer
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - ./customer:/app
+        ports:
+            - "5000:5000"
+        environment:
+            - CUSTOMER_PG_USER=postgres
+            - CUSTOMER_PG_HOST=postgres
+            - CUSTOMER_PG_DB=postgres
+            - CUSTOMER_PG_PASS=postgres
+            - CUSTOMER_PG_PORT=5432
     nginx:
         depends_on:
             - subscriber
