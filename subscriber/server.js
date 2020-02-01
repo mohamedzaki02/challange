@@ -39,9 +39,9 @@ io.on('connection', (socket) => {
 
 
 // TESTING PURPOSE
-// setInterval(function () {
-//     io.emit('someEvent', { message: 'this is a test message' });
-// }, 3000)
+setInterval(function () {
+    io.emit('someEvent', { message: 'this is a test message' });
+}, 3000)
 
 server.listen(4002, function () {
     console.log('RUNING SUBSCRIBER  SERVER @ 4002');

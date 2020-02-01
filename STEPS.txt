@@ -1,0 +1,13 @@
+1- create worker node to simulate vehicles signals and push it to Elasticache(Redis).
+
+2- create subscriber node to get the signal comming from vehicles (through Redis) and use sockets emit 
+    to send to the client node (we are going to create) for live montring.
+
+3- create docker-compose.yml and add redis image & specify both worker & ubscriber services.
+    Result Should be like : ./STEPS/01-worker_subscriber.PNG .
+
+4- create the client node and make sure sockets signals (step no 2) are working fine.
+    use : create-react-app & install react.io-client npm package
+
+5- create nginx to work as (routing proxy server) and another one for the client it self.
+    Result Should be like : ./STEPS/02-adding _client.PNG .

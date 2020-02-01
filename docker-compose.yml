@@ -2,6 +2,16 @@ version: "3"
 services:
     redis:
         image: "redis:latest"
+    nginx:
+        depends_on:
+            - subscriber
+            - client
+        restart: always
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.dev
+        ports:
+            - "3050:80"
     worker:
         build:
             context: ./worker
@@ -12,6 +22,13 @@ services:
         environment:
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+    client:
+        build:
+            context: ./client
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - ./client:/app
     subscriber:
         build:
             context: ./subscriber
