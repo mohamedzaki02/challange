@@ -1,3 +1,4 @@
+const cote = require('cote');
 const keys = require('./keys');
 
 const { Pool } = require('pg');
@@ -10,6 +11,31 @@ const pgClient = new Pool({
 });
 
 pgClient.on('error', () => console.log('Lost PG connection'))
+
+
+
+
+
+// USING COTE : Customers Service is expected to REQUEST (connected|disconnected) Vehicles => From Vehicles Service
+const vehicleRequester = new cote.Requester({ name: 'customers' });
+
+
+
+//TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
+vehicleRequester.send({ type: 'customer_vehicle_handshake' }, handshake_Response => {
+    console.log('### Customers > Handshake Response : ' + handshake_Response + ' ###');
+});
+
+
+
+const filterVehicles = (status, cb) => {
+    vehicleRequester.send({ type: 'filter_vehicles_status', status: status }, customerIds => {
+        cb(customerIds);
+    });
+}
+
+
+
 
 module.exports = {
     prepareTable: () => {
@@ -54,11 +80,57 @@ module.exports = {
             .catch(err => console.log(err));
     },
     getCustomers: (query, cb) => {
+        console.log(query);
         pgClient
             .query(query)
             .then((customers) => {
                 cb(customers.rows);
             })
             .catch(err => cb({ error: err }));
+    },
+    queryCustomers: (queryParams) => {
+        let query = 'SELECT * from customers',
+            filterExpression = false,
+            filterExpressionString = 'WHERE ';
+
+
+
+        if (queryParams.customerId || queryParams.vehcileStatus) {
+
+            if (queryParams.customerId) {
+                filterExpression = true;
+                filterExpressionString += 'customerId=' + queryParams.customerId
+            }
+
+            if (queryParams.vehcileStatus) {
+                filterVehicles(queryParams, customerIds => {
+
+                    filterExpressionString += ((filterExpression ? ' AND ' : '') + 'customerId IN (' + customerIds.join(',') + ')');
+                    let finalQuery = query + filterExpressionString;
+
+                    getCustomers(finalQuery, customersResponse => {
+                        if (customersResponse.error) cb({ error: customersUtility.error });
+                        else cb(customersUtility);
+                    });
+
+                });
+            }
+            else {
+                getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+                    if (customersResponse.error) cb({ error: customersUtility.error });
+                    else cb(customersUtility);
+                });
+            }
+        }
+        else {
+            getCustomers(query, customersResponse => {
+                if (customersResponse.error) cb({ error: customersUtility.error });
+                else cb(customersUtility);
+            });
+        }
+
+
+
     }
+
 };

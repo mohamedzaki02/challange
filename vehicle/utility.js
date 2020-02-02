@@ -9,9 +9,49 @@ const pgClient = new Pool({
     port: keys.VEHICLE_PG_PORT
 });
 
-pgClient.on('error', () => console.log('Lost PG connection'))
+pgClient.on('error', () => console.log('Lost PG connection'));
 
-module.exports = {
+
+const cote = require('cote');
+
+// vehicles service should reply back to customers service 
+// VEHICLES >> REPLY >> CUSTOMERS
+const vehicleResponder = new cote.Responder({ name: 'vehicles_responder' });
+
+// USING COTE : Vehicles Service is expected to REQUEST (only connected) Vehicles => From Monitor Service
+// VEHICLES >> REQUEST >> Monitor
+const vehicleStatusRequester = new cote.Requester({ name: 'vehicles' });
+
+
+//TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
+// vehicles send reply to customers
+vehicleResponder.on('customer_vehicle_handshake', (req, cb) => {
+    cb(new Date());
+});
+
+
+vehicleResponder.on('filter_vehicles', (req, cb) => {
+    vehicleUtility.queryVehicles(req, vehicles => cb(vehicles))
+});
+
+
+//TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
+// vehicles send request to monitor service
+vehicleStatusRequester.send({ type: 'vehicle_monitor_handshake' }, handshake_Response => {
+    console.log('### Vehicles > Handshake Response : ' + handshake_Response + ' ###');
+});
+
+
+
+const monitorVehicles = (cb) => {
+    // vehicles requests only connected vehicles from monitor service
+    vehicleStatusRequester.send({ type: 'filter_vehicles_status' }, connectedVehcilesIds => {
+        cb(connectedVehcilesIds);
+    });
+}
+
+
+const vehicleUtility = {
     prepareTable: () => {
         pgClient
             .query("DROP TABLE IF EXISTS vehicles CASCADE")
@@ -45,12 +85,51 @@ module.exports = {
             })
             .catch(err => console.log(err));
     },
-    getVehicles: (customerId, cb) => {
+    getVehicles: (query, cb) => {
+        console.log('#QUERY >>' + query);
         pgClient
-            .query('SELECT * from vehicles WHERE customerId=' + customerId)
+            .query(query)
             .then((vehicles) => {
                 cb(vehicles.rows);
             })
             .catch(err => cb({ error: err }));
+    },
+    queryVehicles: (queryParams, cb) => {
+        let query = 'SELECT * from vehicles',
+            filterExpression = false,
+            filterExpressionString = 'WHERE ';
+
+        if (req.body.customerId) {
+            filterExpression = true;
+            filterExpressionString += 'customerId=' + queryParams.customerId;
+        }
+        else if (req.body.customerIds) {
+            filterExpression = true;
+            filterExpressionString += 'customerId= IN (' + queryParams.customerIds.join(',') + ')';
+        }
+
+        if (req.body.vehcileStatus) {
+            let status = queryParams.vehcileStatus == 'connected' ? true : false;
+
+            monitorVehicles(status, connectedVehcilesIds => {
+
+                filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
+                let finalQuery = query + filterExpressionString;
+                console.log(finalQuery);
+
+                getVehicles(finalQuery, customersResponse => {
+                    if (customersResponse.error) cb({ error: customersResponse.error });
+                    else cb(customersResponse);
+                });
+            });
+
+        } else {
+            getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+                if (customersResponse.error) cb({ error: customersResponse.error });
+                else cb(customersResponse);
+            });
+        }
     }
 };
+
+module.exports = vehicleUtility;

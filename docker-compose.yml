@@ -10,6 +10,10 @@ services:
             - POSTGRES_PASSWORD=postgres
         ports:
             - "5432:5432"
+    dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+            - "9000:9000"
     customer:
         depends_on:
             - "postgress"
@@ -32,6 +36,7 @@ services:
     vehicle:
         depends_on:
             - "postgress"
+            - "monitor"
         build:
             context: ./vehicle
             dockerfile: Dockerfile.dev
@@ -46,6 +51,23 @@ services:
             - VEHICLE_PG_DB=postgres
             - VEHICLE_PG_PASS=postgres
             - VEHICLE_PG_PORT=5432
+    monitor:
+        depends_on:
+            - "dynamodb"
+        build:
+            context: ./monitor
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - ./monitor:/app
+        environment:
+            - DYNAMO_ENDPOINT=http://dynamodb:9000
+            - DYNAMO_REGION=us-east-1
+            - DYNAMO_ACCESS_KEY=dummy,
+            - DYNAMO_SECRET_KEY=dummy,
+            - DYNAMO_TABLE=vehicles,
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
     nginx:
         depends_on:
             - subscriber
