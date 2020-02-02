@@ -36,6 +36,7 @@ after_success:
   - docker build -t mmzaki/worker-aws ./worker
   - docker build -t mmzaki/customer-aws ./customer
   - docker build -t mmzaki/vehicle-aws ./vehicle
+  - docker build -t mmzaki/monitor-aws ./monitor
 
   # login to docker hub before pushing the images
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
@@ -46,6 +47,7 @@ after_success:
   - docker push mmzaki/worker-aws
   - docker push mmzaki/customer-aws
   - docker push mmzaki/vehicle-aws
+  - docker push mmzaki/monitor-aws
 
 deploy:
   edge: true

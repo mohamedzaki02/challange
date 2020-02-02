@@ -40,4 +40,17 @@
 
 > NOTE: IN BOTH docker-compose.yml & .travis.yml : we need only one postgres service to make sure our process is working fine.
         > but, in AWS > RDS > Postgres > we are going to create two DBs (Customers_db , Vehicles_db).
+
 11- NOW, create the two aws postgres Dbs and add aws Elastic Beanstalk Environment Variables for created Dbs.
+
+12- create Monitor Service and add DynamoDb keys to Elastic Beanstalk Environment Variables.
+    > EX: when the client filter for connected vehicles :-
+    > in this case : we need to display customers who have one or more connected cars only, SO,
+    > customer service communicates with vehicles service asking for connected vehicles to display its owner.
+    > then vehicles service communicates with monitor service asking for only connected vehicles to get vehicle's details.
+    > then monitor service scan vehciles dynamodb table which CONTAINS ONLY CONNECTED VEHICLES and reply back to vehicles service.
+    
+13- when creating dynamoDB table which contains { vehicleId , expiryDate } > you should pay attention to :-
+    > expiryDate should be Number (Epoch Date).
+    > expiryDate should be one minute after insertion Date (ALREADY taken care of in Monitor service).
+    > From Actions Menu > choose Mange TTL > in TTL ATTRIBUTE : write expiryDate
