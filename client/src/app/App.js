@@ -1,27 +1,49 @@
-import React from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
 import './App.css';
+import Customer from '../components/customer/customer';
 
 import socketIOClient from 'socket.io-client';
 
 
-function App() {
-  
-  const socket = socketIOClient(window.location.hostname);
-  
-  socket.on('connect', function(){
-    console.log('Client Connected');
-  });
+class App extends Component {
 
-  socket.on('someEvent', function(data){
-    console.log(data);
-  });
-  
+  socket = socketIOClient(window.location.hostname);
 
-  return (
-    <div className="App">
+  state = {
+    customers: []
+  };
+
+  componentDidMount() {
+    this.fetchCustomers();
+  }
+
+  async fetchCustomers() {
+    const customers = await axios.get('/api/customers');
+    this.setState({
+      customers: customers.data
+    });
+  }
+
+
+
+  render() {
+
+    this.socket.on('connect', function () {
+      console.log('Client Connected');
+    });
+
+    this.socket.on('someEvent', function (data) {
+      console.log(data);
+    });
+
+    return (
+      <div className="App">
         <h3>Client App Is Working Fine</h3>
-    </div>
-  );
+        <Customer></Customer>
+      </div>
+    );
+  }
 }
 
 export default App;

@@ -7,7 +7,7 @@ const customersUtility = require('./utility');
 customersUtility.prepareTable();
 
 
-app.post('/', (req, res) => {
+app.post('/customers', (req, res) => {
 
     customersUtility.queryCustomers(req.body, customersQueryResponse => {
         if (customersQueryResponse) res.status(500).json(customersQueryResponse.error);

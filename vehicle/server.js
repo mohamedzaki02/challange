@@ -6,7 +6,7 @@ const vehicleUtility = require('./utility');
 vehicleUtility.prepareTable();
 
 
-app.post('/', (req, res) => {
+app.post('/vehicles', (req, res) => {
 
     vehicleUtility.queryVehicles(req.body, (vehiclesResponse) => {
         if (vehiclesResponse.error) res.status(500).json(vehiclesResponse.error);

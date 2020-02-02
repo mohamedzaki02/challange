@@ -59,10 +59,6 @@ sub.on('message', (channel, message) => {
         }
     };
 
-    console.log('keys ###########');
-    console.log(kes);
-    console.log(params);
-
     console.log("Adding a new item...");
     docClient.put(params, function (err, data) {
         if (err) {
