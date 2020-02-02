@@ -4,8 +4,11 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import $ from 'jquery';
 import Customer from '../components/customer/customer';
-import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 import socketIOClient from 'socket.io-client';
 
@@ -15,16 +18,21 @@ class App extends Component {
   socket = socketIOClient(window.location.hostname);
 
   state = {
-    customers: []
+    customers: [],
+    customerId: null,
+    vehicleStatus: null
   };
 
   componentDidMount() {
-    this.fetchCustomers();
+    this.fetchCustomerVehicles();
   }
 
-  async fetchCustomers() {
-    const customers = await axios.post('/api/customers');
-    const vehicles = await axios.post('/api/vehicles');
+  async fetchCustomerVehicles(customerId, vehicleStatus) {
+    let queryParams = {};
+    if (customerId) queryParams.customerId = customerId;
+    if (vehicleStatus) queryParams.vehicleStatus = vehicleStatus;
+    const customers = await axios.post('/api/customers', queryParams);
+    const vehicles = await axios.post('/api/vehicles', queryParams);
     customers = customers.data.map(cust => cust.vehicles = vehicles.filter(v => v.customerId == cust.customerId));
     this.setState({
       customers: customers
@@ -46,12 +54,37 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h3>Client App Is Working Fine</h3>
+        <h3>Challange Demo</h3>
 
 
 
 
         <div>
+          <div className="filters">
+            <DropdownButton id="customersDDL" size="sm" className="mt-3" title="Customers List" variant="info"
+              key="customersDDL"
+            >
+              {
+                this.state.customers.forEach(cust =>
+                  <Dropdown.Item eventKey={cust.customerId}
+                    onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, cust.customerId)}>
+                    {cust.fullName}</Dropdown.Item>
+                )
+              }
+              <Dropdown.Divider />
+              <Dropdown.Item eventKey="basic" active>ALL</Dropdown.Item>
+            </DropdownButton>
+
+            <ButtonGroup id="vstatus" aria-label="Vehicle Status" size="sm" className="mt-3">
+              <Button onClick={this.fetchCustomerVehicles.bind(this, 'connected', this.state.customerId)} variant="success">connected</Button>
+              <Button onClick={this.fetchCustomerVehicles.bind(this, null, this.state.customerId)} variant="warning" active>All</Button>
+              <Button onClick={this.fetchCustomerVehicles.bind(this, 'disConnected', this.state.customerId)} variant="danger">Disconnected</Button>
+            </ButtonGroup>
+
+
+          </div>
+
+
           <ListGroup>
             <ListGroup.Item disabled>
               {

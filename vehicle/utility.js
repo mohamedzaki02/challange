@@ -117,20 +117,20 @@ const vehicleUtility = {
                     let finalQuery = query + filterExpressionString;
                     console.log(finalQuery);
 
-                    this.getVehicles(finalQuery, customersResponse => {
+                    vehicleUtility.getVehicles(finalQuery, customersResponse => {
                         if (customersResponse.error) cb({ error: customersResponse.error });
                         else cb(customersResponse);
                     });
                 });
             } else {
-                this.getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+                vehicleUtility.getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersResponse.error });
                     else cb(customersResponse);
                 });
             }
         }
         else {
-            this.getVehicles(query, customersResponse => {
+            vehicleUtility.getVehicles(query, customersResponse => {
                 if (customersResponse.error) cb({ error: customersResponse.error });
                 else cb(customersResponse);
             });
