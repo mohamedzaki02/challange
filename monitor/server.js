@@ -1,6 +1,10 @@
 const cote = require('cote');
 const AWS = require('aws-sdk');
 const redis = require('redis');
+
+
+console.log('################# testing keys')
+
 const keys = require('./keys');
 
 console.log(keys);
@@ -54,6 +58,10 @@ sub.on('message', (channel, message) => {
             expiryDate: Math.round(currentDate.getTime() / 1000)
         }
     };
+
+    console.log('keys ###########');
+    console.log(kes);
+    console.log(params);
 
     console.log("Adding a new item...");
     docClient.put(params, function (err, data) {
