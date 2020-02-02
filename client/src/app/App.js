@@ -95,7 +95,7 @@ class App extends Component {
           <ListGroup>
             <ListGroup.Item disabled>
               {
-                this.state.customers.forEach(customer =>
+                this.state.customers.map(customer =>
                   <Customer name={customer.fullName} address={customer.address} vehicles={this.props.vehicles}></Customer>
                 )
               }

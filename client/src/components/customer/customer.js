@@ -6,6 +6,8 @@ import Table from 'react-bootstrap/Table';
 const customer = props => {
 
 
+    console.log(props);
+
     return (
         <ListGroup.Item disabled>
             <div className="customerDetails">
@@ -23,7 +25,7 @@ const customer = props => {
                 </thead>
                 <tbody>
                     {
-                        props.vehicles.forEach(veh =>
+                        props.vehicles.map(veh =>
                             <Vehicle vehicleId={veh.vehicleId} registerNo={veh.registerNo}></Vehicle>
                         )
                     }
