@@ -74,7 +74,7 @@ class App extends Component {
                 this.state.customers.forEach(cust =>
                   <Dropdown.Item eventKey={cust.customerid}
                     onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, cust.customerid)}>
-                    {cust.fullName}
+                    {cust.fullname}
                   </Dropdown.Item>
                 )
               }
@@ -96,7 +96,7 @@ class App extends Component {
             <ListGroup.Item disabled>
               {
                 this.state.customers.map(customer =>
-                  <Customer name={customer.fullName} address={customer.address} vehicles={this.props.vehicles}></Customer>
+                  <Customer name={customer.fullname} address={customer.address} vehicles={customer.vehicles}></Customer>
                 )
               }
             </ListGroup.Item>
