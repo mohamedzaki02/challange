@@ -71,7 +71,7 @@ class App extends Component {
               key="customersDDL"
             >
               {
-                this.state.customers.forEach(cust =>
+                this.state.customers.map(cust =>
                   <Dropdown.Item eventKey={cust.customerid}
                     onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, cust.customerid)}>
                     {cust.fullname}
