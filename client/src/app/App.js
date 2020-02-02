@@ -27,7 +27,7 @@ class App extends Component {
     this.fetchCustomerVehicles();
   }
 
-  async fetchCustomerVehicles(customerId, vehicleStatus) {
+  async fetchCustomerVehicles(vehicleStatus, customerId) {
     let queryParams = {};
     if (customerId) queryParams.customerId = customerId;
     if (vehicleStatus) queryParams.vehicleStatus = vehicleStatus;
@@ -54,8 +54,8 @@ class App extends Component {
 
     this.socket.on('vehicle_connected', function (data) {
       console.log(data);
-      $('#' + data.vehicleid + '_btn_status').css({ 'background-color': 'green' });
-      $('#' + data.vehicleid + '_btn_status').text('Connected');
+      $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
+      $('#' + data.vehicleId + '_btn_status').text('Connected');
     });
 
     return (
