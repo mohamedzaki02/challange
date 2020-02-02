@@ -53,12 +53,12 @@ class App extends Component {
     });
 
     this.socket.on('vehicle_connected', function (data) {
-      console.log(data);
+      let counterInterval;
       $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
       $('#' + data.vehicleId + '_btn_status').text('Connected');
       $('#' + data.vehicleId + '_lbl_status').text('60');
       if (!counterInterval) {
-        let counterInterval = setInterval(() => {
+        counterInterval = setInterval(() => {
           let _counter = $('#' + data.vehicleId + '_lbl_status');
           let counterVal = _counter.text();
           if (!counterVal) _counter.text('00');
