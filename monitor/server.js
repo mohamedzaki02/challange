@@ -77,7 +77,13 @@ sub.subscribe('insert');
 monitorResponder.on('filter_vehicles_status', (req, cb) => {
 
     const params = {
-        TableName: keys.dynamo_table
+        TableName: keys.dynamo_table,
+        FilterExpression: "expiryDate > :now_date",
+        ExpressionAttributeValues: {
+            ":now_date": {
+                "N": Math.round(currentDate.getTime() / 1000)
+            }
+        }
     };
 
     // usually I avoid using scans and if i have too; i do small parallel scans
