@@ -108,7 +108,7 @@ module.exports = {
                     filterExpressionString += ((filterExpression ? ' AND ' : '') + 'customerId IN (' + customerIds.join(',') + ')');
                     let finalQuery = query + filterExpressionString;
 
-                    getCustomers(finalQuery, customersResponse => {
+                    this.getCustomers(finalQuery, customersResponse => {
                         if (customersResponse.error) cb({ error: customersUtility.error });
                         else cb(customersUtility);
                     });
@@ -116,14 +116,14 @@ module.exports = {
                 });
             }
             else {
-                getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+                this.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersUtility.error });
                     else cb(customersUtility);
                 });
             }
         }
         else {
-            getCustomers(query, customersResponse => {
+            this.getCustomers(query, customersResponse => {
                 if (customersResponse.error) cb({ error: customersUtility.error });
                 else cb(customersUtility);
             });
