@@ -31,9 +31,9 @@ class App extends Component {
     let queryParams = {};
     if (customerId) queryParams.customerId = customerId;
     if (vehicleStatus) queryParams.vehicleStatus = vehicleStatus;
-    const customers = await axios.post('/api/customers', queryParams);
-    const vehicles = await axios.post('/api/vehicles', queryParams);
-    customers = customers.data.map(cust => cust.vehicles = vehicles.filter(v => v.customerId == cust.customerId));
+    let customers = await axios.post('/api/customers', queryParams);
+    let vehicles = await axios.post('/api/vehicles', queryParams);
+    customers = customers.data.map(cust => cust.vehicles = vehicles.data.filter(v => v.customerId == cust.customerId));
     this.setState({
       customers: customers
     });
@@ -50,6 +50,7 @@ class App extends Component {
     this.socket.on('vehicle_connected', function (data) {
       console.log(data);
       $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
+      $('#' + data.vehicleId + '_btn_status').text('Connected');
     });
 
     return (

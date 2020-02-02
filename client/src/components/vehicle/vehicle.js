@@ -10,6 +10,7 @@ const vehicle = props => {
             <td>{props.registerNo}</td>
             <td>
                 <Badge id={props.vehicleId + '_btn_status'} variant="danger">Disconnected</Badge>
+                <label id={props.vehicleId + '_lbl_status'} className="lblStatus"></label>
             </td>
         </tr>
     );

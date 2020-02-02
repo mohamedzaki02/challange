@@ -64,7 +64,7 @@ sub.on('message', (channel, message) => {
         if (err) {
             console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
-            console.log(data);
+            console.log('item has been added');
         }
     });
 });
