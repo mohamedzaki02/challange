@@ -1,13 +1,14 @@
 import React from 'react';
+import Alert from 'react-bootstrap/Alert';
 
 const customer = props => {
 
 
     return (
-        <div className="customers">
+        <Alert className="customers">
             <h3>Customer : {props.fullName} </h3>
             <p>address : {props.address}</p>
-        </div>
+        </Alert>
     );
 
 }

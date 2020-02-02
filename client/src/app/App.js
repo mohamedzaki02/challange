@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Customer from '../components/customer/customer';
 
 import socketIOClient from 'socket.io-client';

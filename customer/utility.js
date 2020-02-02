@@ -37,7 +37,7 @@ const filterVehicles = (status, cb) => {
 
 
 
-module.exports = {
+const utilityObj = {
     prepareTable: () => {
         pgClient
             .query("DROP TABLE IF EXISTS customers CASCADE")
@@ -108,7 +108,7 @@ module.exports = {
                     filterExpressionString += ((filterExpression ? ' AND ' : '') + 'customerId IN (' + customerIds.join(',') + ')');
                     let finalQuery = query + filterExpressionString;
 
-                    this.getCustomers(finalQuery, customersResponse => {
+                    utilityObj.getCustomers(finalQuery, customersResponse => {
                         if (customersResponse.error) cb({ error: customersUtility.error });
                         else cb(customersUtility);
                     });
@@ -116,14 +116,14 @@ module.exports = {
                 });
             }
             else {
-                this.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+                utilityObj.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersUtility.error });
                     else cb(customersUtility);
                 });
             }
         }
         else {
-            this.getCustomers(query, customersResponse => {
+            utilityObj.getCustomers(query, customersResponse => {
                 if (customersResponse.error) cb({ error: customersUtility.error });
                 else cb(customersUtility);
             });
@@ -134,3 +134,5 @@ module.exports = {
     }
 
 };
+
+module.exports = utilityObj;
