@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import $ from 'jquery';
 import Customer from '../components/customer/customer';
 import Table from 'react-bootstrap/Table';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -23,8 +24,10 @@ class App extends Component {
 
   async fetchCustomers() {
     const customers = await axios.post('/api/customers');
+    const vehicles = await axios.post('/api/vehicles');
+    customers = customers.data.map(cust => cust.vehicles = vehicles.filter(v => v.customerId == cust.customerId));
     this.setState({
-      customers: customers.data
+      customers: customers
     });
   }
 
@@ -36,8 +39,9 @@ class App extends Component {
       console.log('Client Connected');
     });
 
-    this.socket.on('someEvent', function (data) {
+    this.socket.on('vehicle_connected', function (data) {
       console.log(data);
+      $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
     });
 
     return (
@@ -52,7 +56,7 @@ class App extends Component {
             <ListGroup.Item disabled>
               {
                 this.state.customers.forEach(customer =>
-                  <Customer name={customer.fullName} address={customer.address}></Customer>
+                  <Customer name={customer.fullName} address={customer.address} vehicles={this.props.vehicles}></Customer>
                 )
               }
             </ListGroup.Item>

@@ -11,7 +11,7 @@ app.post('/customers', (req, res) => {
     customersUtility.queryCustomers(req.body, customersQueryResponse => {
         console.log(customersQueryResponse);
         if (customersQueryResponse.error) res.status(500).json(customersQueryResponse.error);
-        else express.status(200).json(customersQueryResponse);
+        else customersQueryResponse.status(200).json(customersQueryResponse);
     })
 });
 
