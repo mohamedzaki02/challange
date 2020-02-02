@@ -7,8 +7,10 @@ const customer = props => {
 
     return (
         <ListGroup.Item disabled>
-            <h3>{props.fullName}</h3>
-            <p>{props.address}</p>
+            <div className="customerDetails">
+                <h3>{props.fullName}</h3>
+                <p>{props.address}</p>
+            </div>
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>

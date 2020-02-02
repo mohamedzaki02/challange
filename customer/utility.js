@@ -124,6 +124,7 @@ const utilityObj = {
         }
         else {
             utilityObj.getCustomers(query, customersResponse => {
+                console.log(customersResponse)
                 if (customersResponse.error) cb({ error: customersResponse.error });
                 else cb(customersResponse);
             });
