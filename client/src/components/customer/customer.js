@@ -11,7 +11,7 @@ const customer = props => {
     return (
         <ListGroup.Item disabled>
             <div className="customerDetails">
-                <h3>{props.name}</h3>
+                <h3>{props.fullName}</h3>
                 <p>{props.address}</p>
             </div>
             <Table striped bordered hover variant="dark">

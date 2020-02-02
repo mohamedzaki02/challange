@@ -111,7 +111,7 @@ class App extends Component {
             <ListGroup.Item disabled>
               {
                 this.state.customers.map(customer =>
-                  <Customer name={customer.fullname} address={customer.address} vehicles={customer.vehicles}></Customer>
+                  <Customer fullName={customer.fullname} address={customer.address} vehicles={customer.vehicles}></Customer>
                 )
               }
             </ListGroup.Item>
