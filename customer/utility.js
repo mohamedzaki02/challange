@@ -109,23 +109,23 @@ const utilityObj = {
                     let finalQuery = query + filterExpressionString;
 
                     utilityObj.getCustomers(finalQuery, customersResponse => {
-                        if (customersResponse.error) cb({ error: customersUtility.error });
-                        else cb(customersUtility);
+                        if (customersResponse.error) cb({ error: customersResponse.error });
+                        else cb(customersResponse);
                     });
 
                 });
             }
             else {
                 utilityObj.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
-                    if (customersResponse.error) cb({ error: customersUtility.error });
-                    else cb(customersUtility);
+                    if (customersResponse.error) cb({ error: customersResponse.error });
+                    else cb(customersResponse);
                 });
             }
         }
         else {
             utilityObj.getCustomers(query, customersResponse => {
-                if (customersResponse.error) cb({ error: customersUtility.error });
-                else cb(customersUtility);
+                if (customersResponse.error) cb({ error: customersResponse.error });
+                else cb(customersResponse);
             });
         }
 
