@@ -95,7 +95,7 @@ module.exports = {
 
 
 
-        if (queryParams.customerId || queryParams.vehcileStatus) {
+        if (queryParams && (queryParams.customerId || queryParams.vehcileStatus)) {
 
             if (queryParams.customerId) {
                 filterExpression = true;

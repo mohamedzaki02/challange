@@ -60,13 +60,13 @@ const vehicleUtility = {
                     .query("CREATE TABLE IF NOT EXISTS vehicles (vehicleId integer PRIMARY KEY,customerId integer NOT NULL,registerNo varchar(45) UNIQUE NOT NULL)")
                     .then(() => {
                         pgClient.query("INSERT INTO vehicles (vehicleId, customerId, registerNo) VALUES " +
-                            "(11, 123, 'asd-123')," +
-                            "(12, 123, 'dxb-527')," +
-                            "(13, 124, 'qwe-331')," +
-                            "(14, 124, 'wer-455')," +
-                            "(15, 124, 'rty-776')," +
-                            "(16, 124, 'khj-654')," +
-                            "(17, 125, 'hfg-227')"
+                            "(1, 123, 'asd-123')," +
+                            "(2, 123, 'dxb-527')," +
+                            "(3, 124, 'qwe-331')," +
+                            "(4, 124, 'wer-455')," +
+                            "(5, 124, 'rty-776')," +
+                            "(6, 124, 'khj-654')," +
+                            "(7, 125, 'hfg-227')"
                         )
                             .then(() => {
                                 pgClient.query("SELECT * from vehicles")
@@ -99,32 +99,38 @@ const vehicleUtility = {
             filterExpression = false,
             filterExpressionString = 'WHERE ';
 
-        if (req.body.customerId) {
-            filterExpression = true;
-            filterExpressionString += 'customerId=' + queryParams.customerId;
-        }
-        else if (req.body.customerIds) {
-            filterExpression = true;
-            filterExpressionString += 'customerId= IN (' + queryParams.customerIds.join(',') + ')';
-        }
+        if (queryParams) {
+            if (queryParams.customerId) {
+                filterExpression = true;
+                filterExpressionString += 'customerId=' + queryParams.customerId;
+            }
+            else if (queryParams.customerIds) {
+                filterExpression = true;
+                filterExpressionString += 'customerId= IN (' + queryParams.customerIds.join(',') + ')';
+            }
+            if (queryParams.vehcileStatus) {
+                let status = queryParams.vehcileStatus == 'connected' ? true : false;
 
-        if (req.body.vehcileStatus) {
-            let status = queryParams.vehcileStatus == 'connected' ? true : false;
+                monitorVehicles(status, connectedVehcilesIds => {
 
-            monitorVehicles(status, connectedVehcilesIds => {
+                    filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
+                    let finalQuery = query + filterExpressionString;
+                    console.log(finalQuery);
 
-                filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
-                let finalQuery = query + filterExpressionString;
-                console.log(finalQuery);
-
-                getVehicles(finalQuery, customersResponse => {
+                    getVehicles(finalQuery, customersResponse => {
+                        if (customersResponse.error) cb({ error: customersResponse.error });
+                        else cb(customersResponse);
+                    });
+                });
+            } else {
+                getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersResponse.error });
                     else cb(customersResponse);
                 });
-            });
-
-        } else {
-            getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
+            }
+        }
+        else {
+            getVehicles(query, customersResponse => {
                 if (customersResponse.error) cb({ error: customersResponse.error });
                 else cb(customersResponse);
             });
