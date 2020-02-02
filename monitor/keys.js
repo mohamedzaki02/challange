@@ -6,6 +6,3 @@ module.exports = {
     redisHost: process.env.REDIS_HOST,
     redisPort: process.env.REDIS_PORT
 };
-
-//AKIA4X4AV7VQO5OCTKQA
-//PiPX4XI0jS33DXCi8DqP87fSq4yTdCbCUBwbMctX
