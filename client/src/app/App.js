@@ -56,7 +56,21 @@ class App extends Component {
       console.log(data);
       $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
       $('#' + data.vehicleId + '_btn_status').text('Connected');
+      $('#' + data.vehicleId + '_lbl_status').text('60');
+      if (!counterInterval) {
+        let counterInterval = setInterval(() => {
+          let _counter = $('#' + data.vehicleId + '_lbl_status');
+          let counterVal = _counter.text();
+          if (!counterVal) _counter.text('00');
+          else {
+            let newCounterVal = Number(_counter.text()) - 1;
+            _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
+          }
+        }, 1000);
+      }
     });
+
+    let selectedCustomerVal = this.state.customers && this.state.customerId ? this.state.customers.filter(c => c.customerid == this.state.customerId)[0].fullname : 'Customers List';
 
     return (
       <div className="App">
@@ -67,7 +81,8 @@ class App extends Component {
 
         <div>
           <div className="filters">
-            <DropdownButton id="customersDDL" size="sm" className="mt-3" title="Customers List" variant="info"
+            <DropdownButton id="customersDDL" size="sm" className="mt-3"
+              title={selectedCustomerVal} variant="info"
               key="customersDDL"
             >
               {

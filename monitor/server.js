@@ -92,6 +92,8 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         if (err) {
             cb({ error: err });
         } else {
+            console.log('###Query filter');
+            console.log(result);
             cb(result);
         }
     });

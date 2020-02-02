@@ -80,7 +80,7 @@ const utilityObj = {
             .catch(err => console.log(err));
     },
     getCustomers: (query, cb) => {
-        console.log(query);
+        console.log('###Query: ' + query);
         pgClient
             .query(query)
             .then((customers) => {
@@ -93,7 +93,8 @@ const utilityObj = {
             filterExpression = false,
             filterExpressionString = 'WHERE ';
 
-
+        console.log('### Params');
+        console.log(queryParams);
 
         if (queryParams && (queryParams.customerId || queryParams.vehcileStatus)) {
 
