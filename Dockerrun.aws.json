@@ -37,9 +37,6 @@
             "image": "mmzaki/vehicle-aws",
             "hostname": "vehicle",
             "essential": false,
-            "links": [
-                "monitor"
-            ],
             "memory": 128
         },
         {
