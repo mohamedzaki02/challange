@@ -34,11 +34,13 @@ class App extends Component {
     let customers = await axios.post('/api/customers', queryParams);
     let vehicles = await axios.post('/api/vehicles', queryParams);
     customers = customers.data.map(cust => {
-      cust.vehicles = vehicles.data.filter(v => v.customerId == cust.customerId)
+      cust.vehicles = vehicles.data.filter(v => v.customerid == cust.customerid)
       return cust;
     });
     this.setState({
-      customers: customers
+      customers: customers,
+      customerId: customerId,
+      vehicleStatus: vehicleStatus
     });
   }
 
@@ -52,8 +54,8 @@ class App extends Component {
 
     this.socket.on('vehicle_connected', function (data) {
       console.log(data);
-      $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
-      $('#' + data.vehicleId + '_btn_status').text('Connected');
+      $('#' + data.vehicleid + '_btn_status').css({ 'background-color': 'green' });
+      $('#' + data.vehicleid + '_btn_status').text('Connected');
     });
 
     return (
@@ -70,13 +72,14 @@ class App extends Component {
             >
               {
                 this.state.customers.forEach(cust =>
-                  <Dropdown.Item eventKey={cust.customerId}
-                    onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, cust.customerId)}>
-                    {cust.fullName}</Dropdown.Item>
+                  <Dropdown.Item eventKey={cust.customerid}
+                    onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, cust.customerid)}>
+                    {cust.fullName}
+                  </Dropdown.Item>
                 )
               }
               <Dropdown.Divider />
-              <Dropdown.Item eventKey="basic" active>ALL</Dropdown.Item>
+              <Dropdown.Item eventKey="basic" onClick={this.fetchCustomerVehicles.bind(this, this.state.vehicleStatus, null)} active>ALL</Dropdown.Item>
             </DropdownButton>
 
             <ButtonGroup id="vstatus" aria-label="Vehicle Status" size="sm" className="mt-3">
