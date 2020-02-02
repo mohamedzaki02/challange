@@ -1,15 +1,12 @@
 import React from 'react';
 
-function customer() {
-
-
-
-
+const customer = props => {
 
 
     return (
         <div className="customers">
-            <h3>Customers :</h3>
+            <h3>Customer : {props.fullName} </h3>
+            <p>address : {props.address}</p>
         </div>
     );
 
