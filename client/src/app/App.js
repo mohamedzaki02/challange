@@ -33,7 +33,10 @@ class App extends Component {
     if (vehicleStatus) queryParams.vehicleStatus = vehicleStatus;
     let customers = await axios.post('/api/customers', queryParams);
     let vehicles = await axios.post('/api/vehicles', queryParams);
-    customers = customers.data.map(cust => cust.vehicles = vehicles.data.filter(v => v.customerId == cust.customerId));
+    customers = customers.data.map(cust => {
+      cust.vehicles = vehicles.data.filter(v => v.customerId == cust.customerId)
+      return cust;
+    });
     this.setState({
       customers: customers
     });
