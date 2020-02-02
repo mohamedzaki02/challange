@@ -1,11 +1,15 @@
 const cote = require('cote');
 const AWS = require('aws-sdk');
 const redis = require('redis');
+const keys = require('./keys');
+
+console.log(keys);
+
 const redisClient = redis.createClient({
     host: keys.redisHost,
     port: keys.redisPort
 });
-const keys = require('./keys');
+
 
 
 //protocol://service-code.region-code.amazonaws.com
