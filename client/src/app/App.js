@@ -53,7 +53,7 @@ class App extends Component {
         let counters = $("[id $='_lbl_status']");
         let btns = $("[id $='_btn_status']");
         counters.each((indx) => {
-          let _counter = $(this);
+          let _counter = counters.eq(indx);
           let counterVal = _counter.text();
           if (!counterVal) {
             _counter.text('00');
