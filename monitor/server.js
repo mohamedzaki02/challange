@@ -47,7 +47,7 @@ sub.on('err', err => console.log(err));
 
 sub.on('message', (channel, message) => {
     var currentDate = new Date();
-    currentDate.setMinutes(currentDate.getMinutes() + 1);
+    currentDate.setMinutes(currentDate.getSeconds() + 10);
     var params = {
         TableName: keys.dynamo_table,
         Item: {
@@ -75,12 +75,6 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
     console.log('WELCOME TO MONITOR SERVICE');
     const params = {
         TableName: keys.dynamo_table
-        // FilterExpression: "expiryDate > :now_date",
-        // ExpressionAttributeValues: {
-        //     ":now_date": {
-        //         "N": Math.round((new Date().getTime()) / 1000)
-        //     }
-        // }
     };
 
     // usually I avoid using scans and if i have too; i do small parallel scans

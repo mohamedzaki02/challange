@@ -87,7 +87,7 @@ class App extends Component {
     this.socket.on('vehicle_connected', function (data) {
       $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
       $('#' + data.vehicleId + '_btn_status').text('Connected');
-      $('#' + data.vehicleId + '_lbl_status').text('60');
+      $('#' + data.vehicleId + '_lbl_status').text('10');
       $('#' + data.vehicleId + '_lbl_status').css({ 'color': 'green' });
     });
 
