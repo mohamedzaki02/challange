@@ -60,6 +60,8 @@ services:
         volumes:
             - /app/node_modules
             - ./monitor:/app
+        ports:
+            - "7000:7000"
         environment:
             - DYNAMO_ENDPOINT=http://dynamodb:9000
             - DYNAMO_REGION=us-east-1

@@ -1,3 +1,9 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.json());
+
+
 const cote = require('cote');
 const AWS = require('aws-sdk');
 const redis = require('redis');
@@ -85,13 +91,16 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
             let results = result.Items,
                 currentDate = Math.round((new Date().getTime()) / 1000),
                 filteredVehicles = results.filter(m => m.expiryDate > currentDate);
-                console.log('#v monitor sends back response');
-                console.log(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
+            console.log('#v monitor sends back response');
+            console.log(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
             cb(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
         }
     });
 });
 
+
+
+app.listen(7000, () => console.log('LISTENING ON SERVER 7000'));
 
 
 
