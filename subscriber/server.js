@@ -24,7 +24,7 @@ sub.on('err', err => console.log(err));
 
 
 sub.on('message', (channel, message) => {
-    console.log('working : ' + message);
+    //console.log('working : ' + message);
     // when subscriber node gets notified by subscribing to "insert" ... 
     // It should emit to the client using sockets io 
     io.emit('vehicle_connected', { vehicleId: message });

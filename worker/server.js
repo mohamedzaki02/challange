@@ -13,7 +13,7 @@ const redisPublisher = redisClient.duplicate();
 setInterval(function () {
     let val = Math.floor(Math.random() * 10);
     if (val == 0) val = 1;
-    console.log('Pushing : ' + val);
+    //console.log('Pushing : ' + val);
     redisPublisher.hset('values', 'CarNO', val);
     redisPublisher.publish('insert', val);
 }, 2000);

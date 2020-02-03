@@ -31,8 +31,6 @@ vehicleResponder.on('customer_vehicle_handshake', (req, cb) => {
 
 
 vehicleResponder.on('filter_vehicles', (req, cb) => {
-    console.log('#Step 00 : Welcome to Vehicles');
-    console.log(req);
 
     vehicleUtility.queryVehicles(req, vehicles => cb(vehicles))
 });
@@ -48,10 +46,9 @@ vehicleStatusRequester.send({ type: 'vehicle_monitor_handshake' }, handshake_Res
 
 const monitorVehicles = (cb) => {
     // vehicles requests only connected vehicles from monitor service
-
+    console.log('#vRequesting monitor : ');
     vehicleStatusRequester.send({ type: 'filter_vehicles_status' }, connectedVehcilesIds => {
-        console.log('#Step 05 : comming from monitor service ');
-        console.log(connectedVehcilesIds);
+        console.log('#vIncoming response from monitor : ');
         cb(connectedVehcilesIds);
     });
 }
@@ -78,9 +75,9 @@ const vehicleUtility = {
                                 pgClient.query("SELECT * from vehicles")
                                     .then(allVehicles => {
 
-                                        console.log('### ALL vehicles ###');
-                                        console.log(allVehicles.rows);
-                                        console.log('### ----------------------------------------------------------------------- ###');
+                                        // console.log('### ALL vehicles ###');
+                                        // console.log(allVehicles.rows);
+                                        // console.log('### ----------------------------------------------------------------------- ###');
 
                                     })
                                     .catch(err => console.log(err));
@@ -92,7 +89,7 @@ const vehicleUtility = {
             .catch(err => console.log(err));
     },
     getVehicles: (query, cb) => {
-        console.log('#QUERY >>' + query);
+        console.log('#vQuery : ' + query);
         pgClient
             .query(query)
             .then((vehicles) => {
@@ -104,38 +101,29 @@ const vehicleUtility = {
         let query = 'SELECT * from vehicles ',
             filterExpression = false,
             filterExpressionString = 'WHERE ';
-        console.log('#Step 01 : queryParams');
-        console.log(queryParams);
 
         if (queryParams) {
             if (queryParams.customerId) {
-                console.log('#Step 02 : customerId provided > ' + queryParams.customerId);
                 filterExpression = true;
                 filterExpressionString += ' customerId=' + queryParams.customerId;
             }
             else if (queryParams.customerIds) {
-                console.log('#Step 02 : customerIds provided > ' + queryParams.customerId);
                 filterExpression = true;
                 filterExpressionString += ' customerId= IN (' + queryParams.customerIds.join(',') + ')';
             }
             if (queryParams.vehicleStatus) {
-                console.log('#Step 03 : vehicleStatus provided > ' + queryParams.vehicleStatus);
                 let status = queryParams.vehicleStatus == 'connected' ? true : false;
-                console.log('#Step 04 : Calling Moitor service ');
                 monitorVehicles(connectedVehcilesIds => {
 
                     if (connectedVehcilesIds && connectedVehcilesIds.length) filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
                     let finalQuery = query + filterExpressionString;
-                    console.log(finalQuery);
-                    console.log('#Step 06 : finalQuery > ');
-                    console.log(finalQuery);
+                    
                     vehicleUtility.getVehicles(finalQuery, customersResponse => {
                         if (customersResponse.error) cb({ error: customersResponse.error });
                         else cb(customersResponse);
                     });
                 });
             } else {
-                console.log('#Step 03 : NO vehicleStatus provided < ');
                 vehicleUtility.getVehicles(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersResponse.error });
                     else cb(customersResponse);

@@ -56,12 +56,11 @@ sub.on('message', (channel, message) => {
         }
     };
 
-    console.log("Adding a new item...");
     docClient.put(params, function (err, data) {
         if (err) {
             console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
-            console.log('item has been added');
+            //console.log('item has been added');
         }
     });
 });
@@ -72,7 +71,6 @@ sub.subscribe('insert');
 
 
 monitorResponder.on('filter_vehicles_status', (req, cb) => {
-    console.log('WELCOME TO MONITOR SERVICE');
     const params = {
         TableName: keys.dynamo_table
     };
@@ -80,16 +78,12 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
     // usually I avoid using scans and if i have too; i do small parallel scans
     // in our scenario here rows have a TTL period of one minute after that it will be marked { expired } and gets deleted in 48 hours.
     docClient.scan(params, function (err, result) {
-        console.log('###SCAN RESULT');
-        console.log(err);
-        console.log(result);
         if (err) {
             cb({ error: err });
         } else {
             let results = result.Items,
                 currentDate = Math.round((new Date().getTime()) / 1000),
                 filteredVehicles = results.filter(m => m.expiryDate > currentDate);
-            console.log(filteredVehicles)
             cb(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
         }
     });
