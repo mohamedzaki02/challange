@@ -72,7 +72,7 @@ sub.subscribe('insert');
 
 
 monitorResponder.on('filter_vehicles_status', (req, cb) => {
-
+    console.log('WELCOME TO MONITOR SERVICE');
     const params = {
         TableName: keys.dynamo_table,
         FilterExpression: "expiryDate > :now_date",
@@ -86,10 +86,13 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
     // usually I avoid using scans and if i have too; i do small parallel scans
     // in our scenario here rows have a TTL period of one minute after that it will be marked { expired } and gets deleted in 48 hours.
     docClient.scan(params, function (err, result) {
+        console.log('###SCAN RESULT');
+        console.log(err);
+        console.log(result);
         if (err) {
             cb({ error: err });
         } else {
-            console.log('WELCOME TO MONITOR SERVICE');
+
             console.log(result);
             cb(result.data.map(m => m.vehicleid));
         }
