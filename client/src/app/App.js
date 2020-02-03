@@ -24,7 +24,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.fetchCustomerVehicles(null, null, () => this.startVehiclesStatusCountDown);
+    this.fetchCustomerVehicles(null, null, () => this.startVehiclesStatusCountDown());
   }
 
   async fetchCustomerVehicles(vehicleStatus, customerId, cb) {
