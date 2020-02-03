@@ -90,7 +90,7 @@ const utilityObj = {
             .catch(err => cb({ error: err }));
     },
     queryCustomers: (queryParams, cb) => {
-        let query = 'SELECT * from customers',
+        let query = 'SELECT * from customers ',
             filterExpression = false,
             filterExpressionString = 'WHERE ';
 

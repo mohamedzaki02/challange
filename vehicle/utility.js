@@ -101,7 +101,7 @@ const vehicleUtility = {
             .catch(err => cb({ error: err }));
     },
     queryVehicles: (queryParams, cb) => {
-        let query = 'SELECT * from vehicles',
+        let query = 'SELECT * from vehicles ',
             filterExpression = false,
             filterExpressionString = 'WHERE ';
         console.log('#Step 01 : queryParams');

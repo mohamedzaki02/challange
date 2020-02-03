@@ -68,8 +68,8 @@ class App extends Component {
             if (val > 0) {
               newCounterVal = (val - 1);
             } else {
-              _counter.css({ 'background-color': 'red' });
-              _counter.text('disConnected');
+              $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'red' });
+              $('#' + data.vehicleId + '_btn_status').text('disConnected');
             }
             _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
           }
