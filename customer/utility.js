@@ -31,7 +31,8 @@ vehicleRequester.send({ type: 'customer_vehicle_handshake' }, handshake_Response
 const filterVehicles = (status, cb) => {
     console.log('#Step 04 > Getting Vehicles by Status > ' + status);
     vehicleRequester.send({ type: 'filter_vehicles', status: status }, vehicles => {
-        console.log('#Step 05 > vehicleIds comming from Vehicle Service > ' + customerIds.join(','));
+        console.log('#Step 05 > vehicleIds comming from Vehicle Service > ');
+        console.log(vehicles);
         cb(vehicles);
     });
 }

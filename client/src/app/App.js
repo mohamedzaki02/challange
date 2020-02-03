@@ -24,10 +24,10 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.fetchCustomerVehicles();
+    this.fetchCustomerVehicles(null, null, () => this.startVehiclesStatusCountDown);
   }
 
-  async fetchCustomerVehicles(vehicleStatus, customerId) {
+  async fetchCustomerVehicles(vehicleStatus, customerId, cb) {
     let queryParams = {};
     if (customerId) queryParams.customerId = customerId;
     if (vehicleStatus) queryParams.vehicleStatus = vehicleStatus;
@@ -42,6 +42,38 @@ class App extends Component {
       customerId: customerId,
       vehicleStatus: vehicleStatus
     });
+    if (cb) cb();
+  }
+
+
+  startVehiclesStatusCountDown() {
+    let counterInterval;
+    if (!counterInterval) {
+      counterInterval = setInterval(() => {
+        let counters = $("[id$='_lbl_status']");
+        let btns = $("[id$='_btn_status']");
+        counters.each((indx) => {
+          let _counter = $(this);
+          let counterVal = _counter.text();
+          if (!counterVal) {
+            _counter.text('00');
+            _counter.css({ 'color': 'red' });
+          }
+          else {
+            let val = Number(_counter.text());
+            let newCounterVal = 0;
+            if (val > 0) {
+              newCounterVal = (val - 1);
+            } else {
+              btns.eq(indx).css({ 'background-color': 'red' });
+              btns.eq(indx).text('disConnected');
+            }
+            _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
+            _counter.css({ 'color': 'red' });
+          }
+        });
+      }, 1000);
+    }
   }
 
 
@@ -53,28 +85,10 @@ class App extends Component {
     });
 
     this.socket.on('vehicle_connected', function (data) {
-      let counterInterval;
       $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'green' });
       $('#' + data.vehicleId + '_btn_status').text('Connected');
       $('#' + data.vehicleId + '_lbl_status').text('60');
-      if (!counterInterval) {
-        counterInterval = setInterval(() => {
-          let _counter = $('#' + data.vehicleId + '_lbl_status');
-          let counterVal = _counter.text();
-          if (!counterVal) _counter.text('00');
-          else {
-            let val = Number(_counter.text());
-            let newCounterVal = 0;
-            if (val > 0) {
-              newCounterVal = (val - 1);
-            } else {
-              $('#' + data.vehicleId + '_btn_status').css({ 'background-color': 'red' });
-              $('#' + data.vehicleId + '_btn_status').text('disConnected');
-            }
-            _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
-          }
-        }, 1000);
-      }
+      $('#' + data.vehicleId + '_lbl_status').css({ 'color': 'green' });
     });
 
     let selectedCustomerVal = this.state.customers && this.state.customerId ? this.state.customers.filter(c => c.customerid == this.state.customerId)[0].fullname : 'Customers List';
