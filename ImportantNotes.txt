@@ -1,4 +1,37 @@
 - All environment values specified in : docker-compose.yml are just for testing and to make sure
     that process is working fine without any issues.
 
-- Actual environment values will be provided later throw Travis & Beanstalk environment. 
+- Actual environment values will be provided later throw Travis & Beanstalk environment.
+
+- Objective :
+    >> In this Challange >>> AS Requested 
+    > All Services are designed in a MICROSERVICES Architecture using NodeJS and COTE.
+    > All Services are DOCKER CONTAINERIZED.
+    > CI/CD APPLIED > GIT > TRAVIS CI > RUN TESTs > SUCCESS > Build PRODUCTION IMAGES > DOCKER HUB > ELASTIC BEANSTALK (MULTI DOCKER ENV).
+        - NOTE : I demonstrate running a fake test & based on {test passes successfully} CD continues.
+    > I focused on using different AWS Resources ( POSTGRES , ELASTICACHE REDIS , DynamoDB , ELASTIC BEANSTALK) & COMBINE them 
+        together into a working demo, little more than i focused on the business logic itself.
+    
+
+- OVERVIEW :
+    > WORKER Service : simulates vehicles sending their status every minute whether it send it directly or we ping to vehicle to get status.
+    > ELASTICACHE REDIS : using a Pub/Sub paradigm when the id of connected vehicle gets inserted it will notify all subscribers.
+    > SUBSCRIBER Service : is responsible of the live feed of connected vehicles (vehicle's status display on Client container).
+    > MONITOR Service : is responsible of adding & updating the newly connected vehicles ids to DynamoDB and get it back.
+    > DYNAMO DB : responsible for marking vehicles ids as expired and removing it based on TTL Period. SO, only connected vehicles within
+        the retention period will exist in the db.
+    > CUSTOMERS & VEHICLES Service : is responsible for getting/filtering customers directly
+        OR >> communicating with vehicles service which communicating with monitor service to get only connected vehicles.
+           >> when vehicles gets connected vehicles from monitor. it will decide based on the required filter expression (connected or not)
+           >> whether it is going return all vehicles within the ids provided by monitor service or returns all vehicles NOT within those ids.
+           >> after vehicles service gets required vehicles it sends it back to customers service to get customerIds from it and continue filtering.
+     
+
+- SERVERLESS Architecture : we can achive same result by :
+    > Send data streams comming from vehicles to aws Kinesis.
+    > amazon provide different types (streams , firehose & analytics).
+    > in Case we go with Kinesis Streams > we have to watch for our shards capacity 
+        & scale it based on cpu utilization and take in our consideration that data gets retained for a maximum period of 7 days.
+    > Kinesis Analytics is Preferred for SQL type based queries. SO, I Suggest to go with Kinesis Firehose.
+    > Then > Trigger Lambda function on each row insertion to publish to SNS Topic
+    > Then > SNS sends notification to HTTP Endpoint (client get updated which vehicles are connected).
