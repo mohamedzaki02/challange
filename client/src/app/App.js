@@ -64,7 +64,13 @@ class App extends Component {
           if (!counterVal) _counter.text('00');
           else {
             let val = Number(_counter.text());
-            let newCounterVal = val > 0 ? (val - 1) : 0;
+            let newCounterVal = 0;
+            if (val > 0) {
+              newCounterVal = (val - 1);
+            } else {
+              _counter.css({ 'background-color': 'red' });
+              _counter.text('disConnected');
+            }
             _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
           }
         }, 1000);

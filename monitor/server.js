@@ -89,7 +89,9 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         if (err) {
             cb({ error: err });
         } else {
-            cb(result);
+            console.log('WELCOME TO MONITOR SERVICE');
+            console.log(result);
+            cb(result.data.map(m => m.vehicleid));
         }
     });
 });

@@ -29,8 +29,10 @@ vehicleRequester.send({ type: 'customer_vehicle_handshake' }, handshake_Response
 
 
 const filterVehicles = (status, cb) => {
-    vehicleRequester.send({ type: 'filter_vehicles_status', status: status }, customerIds => {
-        cb(customerIds);
+    console.log('#Step 04 > Getting Vehicles by Status > ' + status);
+    vehicleRequester.send({ type: 'filter_vehicles', status: status }, vehicles => {
+        console.log('#Step 05 > vehicleIds comming from Vehicle Service > ' + customerIds.join(','));
+        cb(vehicles);
     });
 }
 
@@ -95,17 +97,23 @@ const utilityObj = {
         if (queryParams && (queryParams.customerId || queryParams.vehicleStatus)) {
 
             if (queryParams.customerId) {
+                console.log('#Step 02 : customerId provided > ' + queryParams.customerId);
+
                 filterExpression = true;
-                filterExpressionString += 'customerId=' + queryParams.customerId
+                filterExpressionString += ' customerId=' + queryParams.customerId
             }
 
             if (queryParams.vehicleStatus) {
-                filterVehicles(queryParams, customerIds => {
-
-                    filterExpressionString += ((filterExpression ? ' AND ' : '') + 'customerId IN (' + customerIds.join(',') + ')');
+                console.log('#Step 03 : vehicleStats provided > ' + queryParams.vehicleStatus);
+                filterVehicles(queryParams, filtered_vehciles => {
+                    let customerIds = filtered_vehciles.map(fv => fv.customerid);
+                    console.log('added step :)');
+                    filterExpressionString += ((filterExpression ? ' AND ' : '') + ' customerId IN (' + customerIds.join(',') + ')');
                     let finalQuery = query + filterExpressionString;
-
+                    console.log('#Step 06 > finalQuery > ' + finalQuery);
                     utilityObj.getCustomers(finalQuery, customersResponse => {
+                        console.log('#Step 07 > final Output > ');
+                        console.log(customersResponse);
                         if (customersResponse.error) cb({ error: customersResponse.error });
                         else cb(customersResponse);
                     });
@@ -113,6 +121,8 @@ const utilityObj = {
                 });
             }
             else {
+                console.log('#Step 03 : NO vehicleStats provided < ');
+                console.log('#Step 04 : query > ' + query + (filterExpression ? filterExpressionString : ''));
                 utilityObj.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
                     if (customersResponse.error) cb({ error: customersResponse.error });
                     else cb(customersResponse);
