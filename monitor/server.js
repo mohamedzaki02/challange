@@ -88,9 +88,9 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         } else {
             let results = result.Items,
                 currentDate = Math.round((new Date().getTime()) / 1000),
-                filteredVehicles = results.filter(m => m.expiryDate > currentDate).map(m => m.vehicleId);
+                filteredVehicles = results.filter(m => m.expiryDate > currentDate);
             console.log(filteredVehicles)
-            cb(filteredVehicles);
+            cb(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
         }
     });
 });

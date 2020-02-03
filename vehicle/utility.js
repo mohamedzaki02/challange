@@ -124,7 +124,7 @@ const vehicleUtility = {
                 console.log('#Step 04 : Calling Moitor service ');
                 monitorVehicles(connectedVehcilesIds => {
 
-                    filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
+                    if (connectedVehcilesIds && connectedVehcilesIds.length) filterExpressionString += ((filterExpression ? ' AND ' : '') + (status ? '' : 'NOT ') + 'vehicleId IN (' + connectedVehcilesIds.join(',') + ')');
                     let finalQuery = query + filterExpressionString;
                     console.log(finalQuery);
                     console.log('#Step 06 : finalQuery > ');
