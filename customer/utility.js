@@ -104,14 +104,19 @@ const utilityObj = {
 
                 filterExpression = true;
                 filterExpressionString += ' customerId=' + queryParams.customerId
+                console.log('#Step 03 : NO vehicleStats provided < ');
+                utilityObj.getCustomers(query + filterExpressionString, customersResponse => {
+                    if (customersResponse.error) cb({ error: customersResponse.error });
+                    else cb(customersResponse);
+                });
             }
 
-            if (queryParams.vehicleStatus) {
+            else if (queryParams.vehicleStatus) {
                 console.log('#Step 03 : vehicleStats provided > ' + queryParams.vehicleStatus);
                 filterVehicles(queryParams, filtered_vehciles => {
                     let customerIds = filtered_vehciles.map(fv => fv.customerid);
                     console.log('added step :)');
-                    filterExpressionString += ((filterExpression ? ' AND ' : '') + ' customerId IN (' + customerIds.join(',') + ')');
+                    if (customerIds.length) filterExpressionString += ' customerId IN (' + customerIds.join(',') + ')';
                     let finalQuery = query + filterExpressionString;
                     console.log('#Step 06 > finalQuery > ' + finalQuery);
                     utilityObj.getCustomers(finalQuery, customersResponse => {
@@ -123,14 +128,7 @@ const utilityObj = {
 
                 });
             }
-            else {
-                console.log('#Step 03 : NO vehicleStats provided < ');
-                console.log('#Step 04 : query > ' + query + (filterExpression ? filterExpressionString : ''));
-                utilityObj.getCustomers(query + (filterExpression ? filterExpressionString : ''), customersResponse => {
-                    if (customersResponse.error) cb({ error: customersResponse.error });
-                    else cb(customersResponse);
-                });
-            }
+
         }
         else {
             utilityObj.getCustomers(query, customersResponse => {
