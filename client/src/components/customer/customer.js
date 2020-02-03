@@ -6,7 +6,6 @@ import Table from 'react-bootstrap/Table';
 const customer = props => {
 
 
-    console.log(props);
 
     return (
         <ListGroup.Item disabled>

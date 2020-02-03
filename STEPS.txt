@@ -48,7 +48,7 @@
     > in this case : we need to display customers who have one or more connected cars only, SO,
     > customer service communicates with vehicles service asking for connected vehicles to display its owner.
     > then vehicles service communicates with monitor service asking for only connected vehicles to get vehicle's details.
-    > then monitor service scan vehciles dynamodb table which CONTAINS ONLY CONNECTED VEHICLES and reply back to vehicles service.
+    > then monitor service scan vehicles dynamodb table which CONTAINS ONLY CONNECTED VEHICLES and reply back to vehicles service.
     
 13- when creating dynamoDB table which contains { vehicleId , expiryDate } > you should pay attention to :-
     > expiryDate should be Number (Epoch Date).

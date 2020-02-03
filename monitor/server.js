@@ -3,11 +3,8 @@ const AWS = require('aws-sdk');
 const redis = require('redis');
 
 
-console.log('################# testing keys')
-
 const keys = require('./keys');
 
-console.log(keys);
 
 const redisClient = redis.createClient({
     host: keys.redisHost,
@@ -92,8 +89,6 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         if (err) {
             cb({ error: err });
         } else {
-            console.log('###Query filter');
-            console.log(result);
             cb(result);
         }
     });

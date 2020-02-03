@@ -59,16 +59,16 @@ const utilityObj = {
                                         console.log('### ----------------------------------------------------------------------- ###');
 
 
-                                        pgClient.query("SELECT * from customers WHERE fullName LIKE 'mo%' ")
-                                            .then(fewCustomers => {
+                                        // pgClient.query("SELECT * from customers WHERE fullName LIKE 'mo%' ")
+                                        //     .then(fewCustomers => {
 
-                                                console.log('### LESS CUSTOMERS ###');
-                                                console.log(fewCustomers.rows);
-                                                console.log('### ----------------------------------------------------------------------- ###');
+                                        //         console.log('### LESS CUSTOMERS ###');
+                                        //         console.log(fewCustomers.rows);
+                                        //         console.log('### ----------------------------------------------------------------------- ###');
 
 
-                                            })
-                                            .catch(err => console.log(err));
+                                        //     })
+                                        //     .catch(err => console.log(err));
 
                                     })
                                     .catch(err => console.log(err));
@@ -80,7 +80,6 @@ const utilityObj = {
             .catch(err => console.log(err));
     },
     getCustomers: (query, cb) => {
-        console.log('###Query: ' + query);
         pgClient
             .query(query)
             .then((customers) => {
@@ -93,17 +92,14 @@ const utilityObj = {
             filterExpression = false,
             filterExpressionString = 'WHERE ';
 
-        console.log('### Params');
-        console.log(queryParams);
-
-        if (queryParams && (queryParams.customerId || queryParams.vehcileStatus)) {
+        if (queryParams && (queryParams.customerId || queryParams.vehicleStatus)) {
 
             if (queryParams.customerId) {
                 filterExpression = true;
                 filterExpressionString += 'customerId=' + queryParams.customerId
             }
 
-            if (queryParams.vehcileStatus) {
+            if (queryParams.vehicleStatus) {
                 filterVehicles(queryParams, customerIds => {
 
                     filterExpressionString += ((filterExpression ? ' AND ' : '') + 'customerId IN (' + customerIds.join(',') + ')');
@@ -125,7 +121,6 @@ const utilityObj = {
         }
         else {
             utilityObj.getCustomers(query, customersResponse => {
-                console.log(customersResponse)
                 if (customersResponse.error) cb({ error: customersResponse.error });
                 else cb(customersResponse);
             });

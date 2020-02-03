@@ -108,8 +108,8 @@ const vehicleUtility = {
                 filterExpression = true;
                 filterExpressionString += 'customerId= IN (' + queryParams.customerIds.join(',') + ')';
             }
-            if (queryParams.vehcileStatus) {
-                let status = queryParams.vehcileStatus == 'connected' ? true : false;
+            if (queryParams.vehicleStatus) {
+                let status = queryParams.vehicleStatus == 'connected' ? true : false;
 
                 monitorVehicles(status, connectedVehcilesIds => {
 
