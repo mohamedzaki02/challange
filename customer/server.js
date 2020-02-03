@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const cote = require('cote');
 const customersUtility = require('./utility');
@@ -6,7 +7,7 @@ const customersUtility = require('./utility');
 
 customersUtility.prepareTable();
 
-
+app.use(bodyParser.json());
 app.post('/customers', (req, res) => {
     console.log('###cq');
     console.log(req);

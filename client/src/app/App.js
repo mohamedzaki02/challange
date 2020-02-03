@@ -63,7 +63,8 @@ class App extends Component {
           let counterVal = _counter.text();
           if (!counterVal) _counter.text('00');
           else {
-            let newCounterVal = Number(_counter.text()) - 1;
+            let val = Number(_counter.text());
+            let newCounterVal = val > 0 ? (val - 1) : 0;
             _counter.text(newCounterVal < 10 ? ('0' + newCounterVal) : newCounterVal);
           }
         }, 1000);

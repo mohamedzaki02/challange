@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 
 const vehicleUtility = require('./utility');
 vehicleUtility.prepareTable();
 
 
+app.use(bodyParser.json());
 app.post('/vehicles', (req, res) => {
 
     vehicleUtility.queryVehicles(req.body, (vehiclesResponse) => {

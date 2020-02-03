@@ -28,6 +28,13 @@
   margin-right: 10px;
 }
 
+.lblStatus{
+  margin-left: 10px;
+  font-family: cursive;
+  color: #3be33b;
+  font-weight: bold;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
