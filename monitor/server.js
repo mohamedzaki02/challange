@@ -92,9 +92,11 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         if (err) {
             cb({ error: err });
         } else {
-
-            console.log(result);
-            cb(result.data.map(m => m.vehicleid));
+            let results = result.Items,
+                currentDate = Math.round((new Date().getTime()) / 1000),
+                filteredVehicles = results.filter(m => m.expiryDate > currentDate).map(m => m.vehicleId);
+            console.log(filteredVehicles)
+            cb(filteredVehicles);
         }
     });
 });
