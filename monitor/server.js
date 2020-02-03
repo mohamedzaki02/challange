@@ -78,7 +78,7 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
         FilterExpression: "expiryDate > :now_date",
         ExpressionAttributeValues: {
             ":now_date": {
-                "N": Math.round(currentDate.getTime() / 1000)
+                "N": Math.round((new Date()).getTime() / 1000)
             }
         }
     };

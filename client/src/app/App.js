@@ -50,8 +50,8 @@ class App extends Component {
     let counterInterval;
     if (!counterInterval) {
       counterInterval = setInterval(() => {
-        let counters = $("[id$='_lbl_status']");
-        let btns = $("[id$='_btn_status']");
+        let counters = $("[id $='_lbl_status']");
+        let btns = $("[id $='_btn_status']");
         counters.each((indx) => {
           let _counter = $(this);
           let counterVal = _counter.text();
