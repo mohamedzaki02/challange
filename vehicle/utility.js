@@ -25,9 +25,9 @@ const vehicleStatusRequester = new cote.Requester({ name: 'vehicles' });
 
 //TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
 // vehicles send reply to customers
-vehicleResponder.on('customer_vehicle_handshake', (req, cb) => {
-    cb(new Date());
-});
+// vehicleResponder.on('customer_vehicle_handshake', (req, cb) => {
+//     cb(new Date());
+// });
 
 
 vehicleResponder.on('filter_vehicles', (req, cb) => {
@@ -38,9 +38,9 @@ vehicleResponder.on('filter_vehicles', (req, cb) => {
 
 //TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
 // vehicles send request to monitor service
-vehicleStatusRequester.send({ type: 'vehicle_monitor_handshake' }, handshake_Response => {
-    console.log('### Vehicles > Handshake Response : ' + handshake_Response + ' ###');
-});
+// vehicleStatusRequester.send({ type: 'vehicle_monitor_handshake' }, handshake_Response => {
+//     console.log('### Vehicles > Handshake Response : ' + handshake_Response + ' ###');
+// });
 
 
 

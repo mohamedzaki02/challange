@@ -22,9 +22,9 @@ const vehicleRequester = new cote.Requester({ name: 'customers' });
 
 
 //TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
-vehicleRequester.send({ type: 'customer_vehicle_handshake' }, handshake_Response => {
-    console.log('### Customers > Handshake Response : ' + handshake_Response + ' ###');
-});
+// vehicleRequester.send({ type: 'customer_vehicle_handshake' }, handshake_Response => {
+//     console.log('### Customers > Handshake Response : ' + handshake_Response + ' ###');
+// });
 
 
 

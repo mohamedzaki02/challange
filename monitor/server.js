@@ -29,9 +29,9 @@ const monitorResponder = new cote.Responder({ name: 'monitor_responder' });
 
 //TESTING MICROSERVICES IN MULTI_DOCKER_CONTAINERS
 // monitor send reply to vehicles
-monitorResponder.on('vehicle_monitor_handshake', (req, cb) => {
-    cb(new Date());
-});
+// monitorResponder.on('vehicle_monitor_handshake', (req, cb) => {
+//     cb(new Date());
+// });
 
 
 
@@ -71,6 +71,7 @@ sub.subscribe('insert');
 
 
 monitorResponder.on('filter_vehicles_status', (req, cb) => {
+    console.log('#v monitor gets vehicles request');
     const params = {
         TableName: keys.dynamo_table
     };
@@ -84,6 +85,8 @@ monitorResponder.on('filter_vehicles_status', (req, cb) => {
             let results = result.Items,
                 currentDate = Math.round((new Date().getTime()) / 1000),
                 filteredVehicles = results.filter(m => m.expiryDate > currentDate);
+                console.log('#v monitor sends back response');
+                console.log(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
             cb(filteredVehicles.length ? filteredVehicles.map(m => m.vehicleId) : []);
         }
     });
